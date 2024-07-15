@@ -1,28 +1,57 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <b-navbar toggleable="lg" type="dark" variant="dark" v-if="notIsLoginPage">
+      <b-navbar-brand href="#">ToDo List</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item to="/">Tarefas</b-nav-item>
+          <b-nav-item to="/form">Formulário</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+
+      <b-navbar-nav>
+        <b-nav-item @click="logout()" v-b-tooltip.hover title="Sair"><i class="fas fa-sign-out-alt"></i></b-nav-item>
+      </b-navbar-nav>
+    </b-navbar>
+
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
+    
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+export default{
+  computed: {
+    notIsLoginPage(){
+      return this.$route.name !== "login" && this.$route.name !== "register";
+    }
+  },
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  methods:{
+      logout(){
+        localStorage.removeItem('authUser');
+        this.$router.push({name: "login"})
+      }
   }
+
+
 }
+
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.fade-enter-active, .fade-leave-active{
+  transition-duration: 0.5s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter, .fade-leave{
+  opacity: 0;
 }
 </style>
